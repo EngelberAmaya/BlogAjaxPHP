@@ -4,7 +4,7 @@ if (!isset($_SESSION['id'],$_SESSION['user'],$_SESSION['email'])) {
 	if ($_POST) {
 		include('core/models/class.Acceso.php');
 		$acceso = new Acceso();
-		$acceso->Registro();
+		$acceso->Registrar();
 		
 	} else {
 		$template = new Smarty();

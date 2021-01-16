@@ -10,7 +10,7 @@
 		</div>
 
 		<div class="form-signin">
-			<h2 class="form-signin-heading">Registro</h2>
+			<h2 class="form-signin-heading">Registrate</h2>
 			<div class="text-left">
 				<label for="inputUsuario">Usuario</label>
 			</div>
@@ -51,24 +51,33 @@
 					connect.onreadystatechange = function(){
 
 						if (connect.readyState == 4 && connect.status == 200) {
-
+							console.log(connect.responseText);
 							if (parseInt(connect.responseText) == 1) {
 								//Conectado con exito
 								// se redireccione
 								result = '<div class="alert alert-dismissible alert-success" style="width: 500px;">'
 								result += '<button type="button" class="close" data-dismiss="alert">x</button>';
-								result += '<strong>Conectado</strong> Bienvenido';
+								result += '<strong>Registro completado</strong> Bienvenido';
 								result += '</div>';
 								location.href = '?view=index';
 								document.getElementById('_AJAX_').innerHTML = result;
-							} else {
+
+							} else if(parseInt(connect.responseText) == 2){
 								// ERROR: Los datos son incorrectos
 								result = '<div class="alert alert-dismissible alert-danger" style="width: 500px;">'
 								result += '<button type="button" class="close" data-dismiss="alert">&times;</button>';
-								result += '<strong>ERROR:</strong> Credenciales incorrectas';
+								result += '<strong>ERROR:</strong> El usuario ya existe';
 								result += '</div>';
 								document.getElementById('_AJAX_').innerHTML = result;
-							}
+
+							} else if(parseInt(connect.responseText) == 3){
+								// ERROR: Los datos son incorrectos
+								result = '<div class="alert alert-dismissible alert-danger" style="width: 500px;">'
+								result += '<button type="button" class="close" data-dismiss="alert">&times;</button>';
+								result += '<strong>ERROR:</strong> El email ya existe';
+								result += '</div>';
+								document.getElementById('_AJAX_').innerHTML = result;
+							} 
 
 						}else if(connect.readyState != 4){
 							// Procesando

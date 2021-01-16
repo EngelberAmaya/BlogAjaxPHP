@@ -42,7 +42,7 @@ class Acceso
 						ini_set('session.cookie_lifetime', time() + (60*60*24*2));
 					}
 					echo 1;
-					echo 'mensaje por si acaso';
+					
 				}else{
 					throw new Exception(2);
 					
@@ -58,7 +58,7 @@ class Acceso
 		} catch (Exception $e) {
 			echo $e->getMessage();	
 		}
-		exit;
+		
 
 	}
 
@@ -67,7 +67,54 @@ class Acceso
 	}
 
 	public function Registrar(){
-		
+		try {
+			if (!empty($_POST['user']) and !empty($_POST['pass']) and !empty($_POST['email'])) {
+				$db = new Conexion();
+				$this->user = $db->real_escape_string($_POST['user']);
+				$this->email = $db->real_escape_string($_POST['email']);
+				$this->pass = $this->Encrypt($_POST['pass']);
+
+				$sql = $db->query("SELECT * FROM users WHERE user='$this->user' OR email='$this->email';");
+
+				if ($db->rows($sql) == 0) {
+
+					$sql2 = $db->query("INSERT INTO users (user,pass, email)
+					VALUES ('$this->user','$this->pass','$this->email');");
+
+					$sql3 = $db->query("SELECT MAX(id) AS id FROM users;");
+
+					$id = $db->recorrer($sql3);
+					$_SESSION['id'] = $id[0];
+					$_SESSION['user'] = $this->user;
+					$_SESSION['email'] = $this->email;
+
+					echo 1;
+
+					$db->liberar($sql2,$sql3);
+					
+				}else{
+					$datos = $db->recorrer($sql);
+					if (strtolower($this->user) == strtolower($datos['user'])) {
+						throw new Exception(2);
+						
+					} else {
+						throw new Exception(3);
+						
+					}
+					
+					
+				}
+				$db->liberar($sql);
+				$db->close();
+				
+			} else {
+				throw new Exception("Error: Datos vacios.");
+				
+			}
+			
+		} catch (Exception $reg) {
+			echo $reg->getMessage();	
+		}
 	}
 }
 
